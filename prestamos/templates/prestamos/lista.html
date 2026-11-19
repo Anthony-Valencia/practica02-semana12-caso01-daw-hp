@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Lista de Préstamos</h2>
+<a href="{% url 'prestamos:crear' %}" class="btn btn-primary mb-3">Nuevo Préstamo</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th><th>Docente</th><th>Equipo</th><th>F. Préstamo</th>
+      <th>F. Devolución</th><th>Estado</th><th>Días retraso</th><th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in prestamos %}
+    <tr>
+      <td>{{ p.id }}</td>
+      <td>{{ p.docente.get_full_name }}</td>
+      <td>{{ p.equipo.nombre }}</td>
+      <td>{{ p.fecha_prestamo }}</td>
+      <td>{{ p.fecha_devolucion_esperada }}</td>
+      <td><span class="badge bg-{% if p.estado == 'activo' %}success{% elif p.estado == 'vencido' %}danger{% else %}secondary{% endif %}">{{ p.get_estado_display }}</span></td>
+      <td>{{ p.dias_retraso }}</td>
+      <td>
+        {% if p.estado == 'activo' %}
+          <a href="{% url 'prestamos:devolver' p.pk %}" class="btn btn-sm btn-warning">Devolver</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
